@@ -1,4 +1,4 @@
-# editor-test
+# todo-list
 
 ## Project setup
 ```
