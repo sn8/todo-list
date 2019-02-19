@@ -1,0 +1,119 @@
+#app {
+  font-family: Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  margin: 60px auto;
+  width: 40%;
+}
+
+button {
+  border: unset;
+  background: unset;
+  font-size: 16px;
+  color: rgb(151, 151, 151);
+  border-radius: 2px;
+  padding: 4px 6px;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(245, 245, 245);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.icon {
+  display: block;
+  width: 8px;
+  height: 13px;
+  background-repeat: none;
+
+  &-wt {
+    display: inline-block;
+    margin-right: 6px;
+  }
+
+  &-grip {
+    background-image: url('../assets/grip.svg');
+  }
+
+  &-times {
+    width: 9px;
+    background-image: url('../assets/times.svg');
+  }
+
+  &-plus {
+    width: 11px;
+    height: 12px;
+    background-image: url('../assets/plus.svg');
+  }
+
+  &-check {
+    width: 13px;
+    height: 15px;
+    background-image: url('../assets/square.svg');
+  }
+}
+
+.items-list {
+  margin: 10px 0 0 -55px;
+
+  > .editable-item {
+    display: flex;
+    padding: 5px 8px;
+
+    > button {
+      margin: 0 1px;
+    }
+
+    > .handle,
+    > .remove {
+      visibility: hidden;
+    }
+
+    > .handle {
+      cursor: move;
+    }
+
+    > .content {
+      width: 100%;
+      margin-left: 1px;
+      padding: 2px;
+
+      &:focus {
+        outline: none;
+      }
+
+      &[contenteditable=true]:empty:focus::before {
+        content: attr(data-placeholder);
+        color: rgb(167, 167, 167);
+      }
+    }
+
+    &.done {
+      > .content {
+        text-decoration: line-through;
+        color: rgb(151, 151, 151);
+      }
+
+      > .check > .icon-check {
+        background-image: url('../assets/check-square.svg');
+      }
+    }
+  }
+
+  &:not(.drag-active) {
+    > .editable-item {
+      &:hover {
+        > .handle,
+        > .remove {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}

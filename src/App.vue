@@ -1,22 +1,25 @@
 <template>
   <div id="app">
     <button @click="add">
-      <span class="icon">➕</span>
+      <span class="icon icon-plus icon-wt"/>
       Add item
     </button>
     <draggable
       v-model="list"
       :options="draggableOptions"
+      :class="{ 'drag-active' : dragActive }"
       class="items-list"
-      ref="list">
+      ref="list"
+      @start="dragActive = true"
+      @end="dragActive = false">
       <editable-item
         v-focus-on-insert
         v-for="(item, index) in items"
         :key="item.localId"
         :class="`item_${index}`"
         :item="item"
-        :default-value="defaultTitle"
         @update="update"
+        @toggle="toggle"
         @remove="remove"
         @previousElement="previousElement"
         @nextElement="nextElement"/>
@@ -37,9 +40,9 @@ export default {
   },
   data() {
     return {
-      defaultTitle: 'New Unit',
+      dragActive: false,
       draggableOptions: {
-        animation: 200,
+        animation: 150,
         handle: '.handle',
       },
     };
@@ -60,15 +63,14 @@ export default {
       'setItems',
       'add',
       'update',
+      'toggle',
       'remove',
     ]),
     previousElement(item) {
       const itemIndex = this.items.indexOf(item);
       if (this.items.length > 1) {
         this.remove(item);
-        this.moveCaretAndFocus(
-          document.querySelector(`.item_${itemIndex - 1} .content`),
-        );
+        this.moveCaretAndFocus(itemIndex - 1);
       }
     },
     nextElement(item) {
@@ -76,12 +78,12 @@ export default {
       if (itemIndex === (this.items.length - 1)) {
         this.add();
       } else {
-        this.moveCaretAndFocus(
-          document.querySelector(`.item_${itemIndex + 1} .content`),
-        );
+        this.moveCaretAndFocus(itemIndex + 1);
       }
     },
-    moveCaretAndFocus(el) {
+    moveCaretAndFocus(index) {
+      const el = document
+        .querySelector(`.item_${index} .content`);
       const range = document.createRange();
       const sel = window.getSelection();
       const pos = Number(el.innerText.length);
@@ -101,38 +103,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin: 60px auto;
-  width: 400px;
-}
-
-button {
-  border: unset;
-  background: unset;
-  font-size: 16px;
-  color: rgb(151, 151, 151);
-  cursor: pointer;
-
-  &:hover {
-    color: rgb(175, 175, 175);
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  > .icon {
-    margin-right: 6px;
-  }
-}
-
-.items-list {
-  margin: 10px 0 0 -23px;
-}
-</style>
